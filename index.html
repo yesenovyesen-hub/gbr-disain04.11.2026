@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#dbdbdb">
+  <title>SIDEQUEST - ॣ������</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <main class="app-shell">
+    <section class="screen screen-signup active" id="signup-screen" aria-labelledby="signup-title">
+      <h1 id="signup-title">Sign up</h1>
+      <form id="signup-form" novalidate>
+        <div class="name-row">
+          <label class="field"><span class="sr-only">First name</span><input name="firstName" autocomplete="given-name" placeholder="First name" required></label>
+          <label class="field"><span class="sr-only">Last name</span><input name="lastName" autocomplete="family-name" placeholder="Last name" required></label>
+        </div>
+        <label class="field"><span class="sr-only">Email or phone number</span><input name="contact" type="email" autocomplete="email" placeholder="Email" required></label>
+        <label class="field password-field"><span class="sr-only">Password</span><input name="password" type="password" autocomplete="new-password" placeholder="Password" minlength="8" required><button class="eye" type="button" aria-label="�������� ��஫�">?</button></label>
+        <label class="field password-field"><span class="sr-only">Confirm password</span><input name="confirmPassword" type="password" autocomplete="new-password" placeholder="Confirm Password" required><button class="eye" type="button" aria-label="�������� ��஫�">?</button></label>
+        <fieldset class="birth"><legend>Birth of date</legend><div class="birth-row"><label class="field"><span class="sr-only">����� ஦�����</span><select name="month" required><option value="">Date/month</option><option>January</option><option>February</option><option>March</option><option>April</option><option>May</option><option>June</option><option>July</option><option>August</option><option>September</option><option>October</option><option>November</option><option>December</option></select></label><label class="field year-field"><span class="sr-only">��� ஦�����</span><select name="year" required><option value="">Year</option></select></label></div></fieldset>
+        <fieldset class="gender"><legend>Gender</legend><div class="gender-row"><label><input type="radio" name="gender" value="Male" required><span>Male</span></label><label><input type="radio" name="gender" value="Female"><span>Female</span></label><label><input type="radio" name="gender" value="Others"><span>Others</span></label></div></fieldset>
+        <label class="agreement"><input type="checkbox" name="agreement" required><span>I Agree with <a href="/privacy.html">privacy</a> and <a href="/terms.html">policy</a></span></label>
+        <p class="message" id="signup-message" aria-live="polite"></p>
+        <button class="primary" type="submit">Sign up</button>
+      </form>
+      <p class="confirm-prompt"><button type="button" class="text-button" id="continue-confirmation">��� ����稫� ���? ���⢥न�� email</button></p>
+      <p class="signin">Already have an account ? <button type="button" class="text-button" id="signin-link">Sign in</button></p>
+    </section>
+
+    <section class="screen screen-verify" id="phone-screen" aria-labelledby="phone-title" hidden>
+      <button class="back" type="button" data-back="signup" aria-label="�����"><</button>
+      <h1 id="phone-title">Verify your number</h1>
+      <p class="subcopy">Please enter your Country &amp;<br> your phone number.</p>
+      <label class="phone-entry"><span class="flag" aria-hidden="true">?</span><select id="country-code" aria-label="��� ��࠭�"><option value="+84">+84</option><option value="+7">+7</option><option value="+1">+1</option></select><input id="phone-input" type="tel" autocomplete="tel" aria-label="����� ⥫�䮭�" placeholder="Phone number"></label>
+      <p class="message" id="phone-message" aria-live="polite"></p>
+      <button class="primary" id="send-code" type="button">Next</button>
+      <p class="demo-note">����-०��: �����騩 SMS ���� �� ��ࠢ�����.</p>
+    </section>
+
+    <section class="screen screen-verify" id="code-screen" aria-labelledby="code-title" hidden>
+      <button class="back" type="button" data-back="signup" aria-label="�����"><</button>
+      <h1 id="code-title">Enter code</h1>
+      <p class="subcopy">Enter the 6-digit code we sent you at<br><span id="phone-summary"></span></p>
+      <div class="code-row" role="group" aria-label="���⨧���� ��� ���⢥ত����">
+        <input inputmode="numeric" maxlength="1" aria-label="���� 1"><input inputmode="numeric" maxlength="1" aria-label="���� 2"><input inputmode="numeric" maxlength="1" aria-label="���� 3"><input inputmode="numeric" maxlength="1" aria-label="���� 4"><input inputmode="numeric" maxlength="1" aria-label="���� 5"><input inputmode="numeric" maxlength="1" aria-label="���� 6">
+      </div>
+      <p class="message" id="code-message" aria-live="polite"></p>
+      <button class="primary" id="verify-code" type="button">Next</button>
+      <p class="resend">�� ����稫� ���? <button class="text-button" id="resend-code" type="button">��ࠢ��� ᭮��</button></p>
+      
+    </section>
+
+    <section class="screen screen-success" id="success-screen" aria-labelledby="success-title" hidden>
+      <div class="success-mark" aria-hidden="true">?</div><h1 id="success-title">��⮢�!</h1><p id="success-copy">��������� �����襭�.</p>
+      <button class="primary" type="button" id="restart">����� ������</button>
+    </section>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </main>
+</body>
+</html>
+
+
+
+
+
+
+
