@@ -1,4 +1,4 @@
-import {
+﻿import {
   CognitoIdentityProviderClient,
   SignUpCommand,
   ConfirmSignUpCommand,
@@ -52,16 +52,16 @@ function setBusy(button, busy, label) {
 
 function cognitoError(error) {
   const messages = {
-    UsernameExistsException: '��� email 㦥 ��ॣ����஢��. �᫨ ���쬮 � ����� ��諮 ࠭��, �ᯮ���� �� ���.',
-    InvalidPasswordException: '��஫� �� ���室��. ������ �� ����� 8 ᨬ�����.',
-    InvalidParameterException: '�஢���� ����� ���.',
-    LimitExceededException: '���誮� ����� ����ᮢ. ���஡�� �����.',
-    TooManyRequestsException: '���誮� ����� ����ᮢ. ���஡�� �����.',
-    CodeMismatchException: '������ ���. �஢���� ���쬮 � ���஡�� ��� ࠧ.',
-    ExpiredCodeException: '�ப ����⢨� ���� ����. ������ ����.',
-    NotAuthorizedException: '�� 㤠���� ���⢥न�� ����. ��������, �� 㦥 ���⢥ত�.'
+    UsernameExistsException: 'Этот email уже зарегистрирован. Если письмо с кодом пришло раньше, используйте тот код.',
+    InvalidPasswordException: 'Пароль не подходит. Введите не менее 8 символов.',
+    InvalidParameterException: 'Проверьте данные формы.',
+    LimitExceededException: 'Слишком много запросов. Попробуйте позже.',
+    TooManyRequestsException: 'Слишком много запросов. Попробуйте позже.',
+    CodeMismatchException: 'Неверный код. Проверьте письмо и попробуйте ещё раз.',
+    ExpiredCodeException: 'Срок действия кода истёк. Запросите новый.',
+    NotAuthorizedException: 'Не удалось подтвердить адрес. Возможно, он уже подтверждён.'
   };
-  return messages[error?.name] || '�� 㤠���� �易���� � �ࢨᮬ ॣ����樨. ���஡�� �����.';
+  return messages[error?.name] || 'Не удалось связаться с сервисом регистрации. Попробуйте позже.';
 }
 
 function showCodeFor(email) {
@@ -79,13 +79,13 @@ form.addEventListener('submit', async event => {
   setError('#signup-message', '');
   if (!form.reportValidity()) return;
   if (form.elements.password.value !== form.elements.confirmPassword.value) {
-    setError('#signup-message', '��஫� �� ᮢ������.');
+    setError('#signup-message', 'Пароли не совпадают.');
     form.elements.confirmPassword.focus();
     return;
   }
   const email = form.elements.contact.value.trim().toLowerCase();
   const button = form.querySelector('button[type="submit"]');
-  setBusy(button, true, '��ࠢ��...');
+  setBusy(button, true, 'Отправка...');
   try {
     await cognito.send(new SignUpCommand({
       ClientId: cognitoClientId,
@@ -112,7 +112,7 @@ document.querySelectorAll('.eye').forEach(button => button.addEventListener('cli
   const input = button.parentElement.querySelector('input');
   const visible = input.type === 'password';
   input.type = visible ? 'text' : 'password';
-  button.setAttribute('aria-label', visible ? '������ ��஫�' : '�������� ��஫�');
+  button.setAttribute('aria-label', visible ? 'Скрыть пароль' : 'Показать пароль');
 }));
 
 document.querySelectorAll('[data-back]').forEach(button => button.addEventListener('click', () => {
@@ -140,12 +140,12 @@ codeInputs.forEach((input, index) => {
 document.querySelector('#verify-code').addEventListener('click', async event => {
   const code = codeInputs.map(input => input.value).join('');
   if (code.length !== 6) {
-    setError('#code-message', '������ �� 6 ���.');
+    setError('#code-message', 'Введите все 6 цифр.');
     codeInputs.find(input => !input.value)?.focus();
     return;
   }
   const button = event.currentTarget;
-  setBusy(button, true, '�஢�ઠ...');
+  setBusy(button, true, 'Проверка...');
   try {
     await cognito.send(new ConfirmSignUpCommand({
       ClientId: cognitoClientId,
@@ -155,8 +155,8 @@ document.querySelector('#verify-code').addEventListener('click', async event => 
     sessionStorage.removeItem('sidequestPendingEmail');
     currentEmail = '';
     setError('#code-message', '');
-    document.querySelector('#success-title').textContent = '���� ���⢥ত���';
-    document.querySelector('#success-copy').textContent = '������ ᮧ���. �室 ����� ᫥���騬 蠣��.';
+    document.querySelector('#success-title').textContent = 'Почта подтверждена';
+    document.querySelector('#success-copy').textContent = 'Аккаунт создан. Вход появится следующим шагом.';
     showScreen('success');
   } catch (error) {
     setError('#code-message', cognitoError(error));
@@ -168,7 +168,7 @@ document.querySelector('#verify-code').addEventListener('click', async event => 
 document.querySelector('#resend-code').addEventListener('click', async event => {
   if (!currentEmail) return showScreen('signup');
   const button = event.currentTarget;
-  setBusy(button, true, '��ࠢ��...');
+  setBusy(button, true, 'Отправка...');
   try {
     await cognito.send(new ResendConfirmationCodeCommand({
       ClientId: cognitoClientId,
@@ -176,7 +176,7 @@ document.querySelector('#resend-code').addEventListener('click', async event => 
     }));
     codeInputs.forEach(input => input.value = '');
     setError('#code-message', '');
-    notice('���� ��� ��ࠢ��� �� �����.');
+    notice('Новый код отправлен на почту.');
     codeInputs[0].focus();
   } catch (error) {
     setError('#code-message', cognitoError(error));
@@ -196,16 +196,15 @@ document.querySelector('#restart').addEventListener('click', () => {
 document.querySelector('#continue-confirmation').addEventListener('click', () => {
   const email = form.elements.contact.value.trim().toLowerCase();
   if (!form.elements.contact.checkValidity() || !email) {
-    setError('#signup-message', '������ email, �� ����� ���� ���.');
+    setError('#signup-message', 'Введите email, на который пришёл код.');
     form.elements.contact.focus();
     return;
   }
   showCodeFor(email);
 });
 document.querySelector('#signin-link').addEventListener('click', () => {
-  notice('�室 � ������ ����� ᫥���騬 蠣��.');
+  notice('Вход в аккаунт появится следующим шагом.');
 });
 
 if (currentEmail) showCodeFor(currentEmail);
-
 
